@@ -1,0 +1,727 @@
+{
+  "info": {
+    "name": "LawVriksh Blog Management System",
+    "description": "Comprehensive API collection for the blog management system with CRUD operations, authentication, likes, and comments",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"testpassword\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"testpassword\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/register",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "auth", "register"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Blog Post (Unauthorized)",
+          "request": {
+            "auth": {
+              "type": "bearer"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Unauthorized Post\",\n  \"content\": \"This should fail without authentication\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/posts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts"]
+            }
+          },
+          "response": [
+            {
+              "name": "Unauthorized Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Unauthorized Post\",\n  \"content\": \"This should fail without authentication\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/posts",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "posts"]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "body": "{\n  \"detail\": \"Not authenticated\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get All Blog Posts",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/posts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{baseUrl}}/api/posts",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "posts"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 1,\n    \"title\": \"Understanding FastAPI\",\n    \"content\": \"FastAPI is a modern, fast web framework...\",\n    \"author\": \"testuser\",\n    \"created_at\": \"2024-01-15T10:30:00Z\",\n    \"updated_at\": \"2024-01-15T10:30:00Z\",\n    \"likes_count\": 2,\n    \"comments_count\": 1\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Single Blog Post",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "1"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{baseUrl}}/api/posts/1",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "posts", "1"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": 1,\n  \"title\": \"Understanding FastAPI\",\n  \"content\": \"FastAPI is a modern, fast web framework...\",\n  \"author\": \"testuser\",\n  \"created_at\": \"2024-01-15T10:30:00Z\",\n  \"updated_at\": \"2024-01-15T10:30:00Z\",\n  \"likes_count\": 2,\n  \"comments_count\": 1\n}"
+            },
+            {
+              "name": "Not Found Response",
+              "originalRequest": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{baseUrl}}/api/posts/999",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "posts", "999"]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "body": "{\n  \"detail\": \"Post not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Blog Post (Authorized - Author)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated: Understanding FastAPI\",\n  \"content\": \"FastAPI is a modern, fast web framework for building APIs with Python 3.7+ based on standard Python type hints. Updated with more details about its amazing features!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "1"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Updated: Understanding FastAPI\",\n  \"content\": \"FastAPI is a modern, fast web framework for building APIs with Python 3.7+ based on standard Python type hints. Updated with more details!\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/posts/1",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "posts", "1"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": 1,\n  \"title\": \"Updated: Understanding FastAPI\",\n  \"content\": \"FastAPI is a modern, fast web framework for building APIs with Python 3.7+ based on standard Python type hints. Updated with more details!\",\n  \"author\": \"testuser\",\n  \"created_at\": \"2024-01-15T10:30:00Z\",\n  \"updated_at\": \"2024-01-15T11:00:00Z\",\n  \"likes_count\": 0,\n  \"comments_count\": 0\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Blog Post (Unauthorized)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Hacked Post\",\n  \"content\": \"This should fail\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "1"]
+            }
+          },
+          "response": [
+            {
+              "name": "Unauthorized Response",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Hacked Post\",\n  \"content\": \"This should fail\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/posts/1",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "posts", "1"]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "body": "{\n  \"detail\": \"Not authenticated\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Blog Post (Authorized - Author)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "1"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/posts/1",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "posts", "1"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Post deleted successfully\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Likes",
+      "item": [
+        {
+          "name": "Like Post (Authorized)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/1/like",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "1", "like"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/posts/1/like",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "posts", "1", "like"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Post liked successfully\",\n  \"likes_count\": 1\n}"
+            }
+          ]
+        },
+        {
+          "name": "Like Post Again (Should Fail)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/1/like",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "1", "like"]
+            }
+          },
+          "response": [
+            {
+              "name": "Already Liked Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/posts/1/like",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "posts", "1", "like"]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"detail\": \"You have already liked this post\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Like Post (Unauthorized)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/1/like",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "1", "like"]
+            }
+          },
+          "response": [
+            {
+              "name": "Unauthorized Response",
+              "originalRequest": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{baseUrl}}/api/posts/1/like",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "posts", "1", "like"]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "body": "{\n  \"detail\": \"Not authenticated\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Unlike Post (Authorized)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/1/like",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "1", "like"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/posts/1/like",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "posts", "1", "like"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Post unliked successfully\",\n  \"likes_count\": 0\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Comments",
+      "item": [
+        {
+          "name": "Add Comment (Authorized)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Great post! Very informative and well-written. Thanks for sharing!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/1/comment",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "1", "comment"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"content\": \"Great post! Very informative and well-written. Thanks for sharing!\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/posts/1/comment",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "posts", "1", "comment"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": 1,\n  \"content\": \"Great post! Very informative and well-written. Thanks for sharing!\",\n  \"author\": \"testuser\",\n  \"post_id\": 1,\n  \"created_at\": \"2024-01-15T11:00:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Add Comment (Unauthorized)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"This should fail without authentication\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/1/comment",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "1", "comment"]
+            }
+          },
+          "response": [
+            {
+              "name": "Unauthorized Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"content\": \"This should fail without authentication\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/posts/1/comment",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "posts", "1", "comment"]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "body": "{\n  \"detail\": \"Not authenticated\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Comments for Post",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/1/comments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "1", "comments"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{baseUrl}}/api/posts/1/comments",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "posts", "1", "comments"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 1,\n    \"content\": \"Great post! Very informative and well-written. Thanks for sharing!\",\n    \"author\": \"testuser\",\n    \"post_id\": 1,\n    \"created_at\": \"2024-01-15T11:00:00Z\"\n  },\n  {\n    \"id\": 2,\n    \"content\": \"I agree! FastAPI is amazing for building APIs quickly.\",\n    \"author\": \"anotheruser\",\n    \"post_id\": 1,\n    \"created_at\": \"2024-01-15T11:15:00Z\"\n  }\n]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "health"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{baseUrl}}/api/health",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "health"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"status\": \"healthy\",\n  \"timestamp\": \"2024-01-15T12:00:00Z\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
+    
