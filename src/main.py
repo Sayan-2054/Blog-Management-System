@@ -12,7 +12,7 @@ import uvicorn
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="LawVriksh Blog Management System",
+    title="Blog Management System",
     description="A blog management system with CRUD operations, likes, and comments",
     version="1.0.0"
 )
